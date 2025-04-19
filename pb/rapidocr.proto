@@ -1,0 +1,43 @@
+syntax = "proto3";
+import "google/protobuf/wrappers.proto";
+package rapidocr;
+
+service RapidOCRService{
+  rpc recognize(Image) returns (Response) {}
+  rpc recognize_table(Image) returns (TableResponse) {}
+}
+
+message Image{
+  optional string link = 1;
+  optional bytes data = 2;
+  // message for debug / logging usage
+  optional string info = 9;
+  google.protobuf.BoolValue use_det = 3;
+  google.protobuf.BoolValue use_cls = 4;
+  google.protobuf.BoolValue use_rec = 5;
+  // 0.5
+  google.protobuf.FloatValue box_thresh = 6;
+  // 1.6
+  google.protobuf.FloatValue unclip_ratio = 7;
+  // 0.5
+  google.protobuf.FloatValue text_score = 8;
+}
+
+message point{
+  float x = 1;
+  float y = 2;
+}
+
+message Part{
+  repeated point points = 1;
+  string text = 2;
+  float confidence = 3;
+}
+
+message Response{
+  repeated Part parts = 1;
+}
+
+message TableResponse{
+  string html = 1;
+}
